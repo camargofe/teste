@@ -2,7 +2,7 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build artifacts
 out/
 
 # Environment variables
@@ -10,7 +10,7 @@ out/
 .env.local
 .env.*
 
-# IDE files
+# IDE and editor settings
 .vscode/
 .idea/
 
@@ -24,6 +24,11 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.swp
+*.swo
+
+# Coverage reports
+coverage/
+htmlcov/
 
 # Python cache
 __pycache__/
@@ -31,17 +36,12 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
-
 # Node.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Compression archives
+# Compression artifacts
 *.zip
 *.gz
 *.tar
