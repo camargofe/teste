@@ -27,7 +27,7 @@ export class AgentManager {
       id: generateId(),
       name: data.name ?? 'Novo Agente',
       role: data.role ?? 'Assistente geral',
-      model: data.model ?? 'qwen-plus',
+      model: data.model ?? 'openai/gpt-4o-mini',
       systemPrompt: data.systemPrompt ?? 'Você é um assistente inteligente e prestativo.',
       temperature: data.temperature ?? 0.7,
       maxTokens: data.maxTokens ?? 2048,
@@ -95,7 +95,7 @@ export class AgentManager {
     ];
 
     // Call AI API
-    const apiKey = vscode.workspace.getConfiguration('aiAgentStudio').get<string>('qwenApiKey', '');
+    const apiKey = vscode.workspace.getConfiguration('aiAgentStudio').get<string>('openRouterApiKey', '');
     let response: string;
     let tokens = 0;
 
@@ -103,7 +103,7 @@ export class AgentManager {
       // Simulate response for demo / free tier
       ({ response, tokens } = await this.simulateResponse(agent, userMessage, systemContent));
     } else {
-      ({ response, tokens } = await this.callQwenAPI(agent, messages, systemContent, apiKey));
+      ({ response, tokens } = await this.callOpenRouterAPI(agent, messages, systemContent, apiKey));
     }
 
     // Update session
@@ -192,7 +192,7 @@ export class AgentManager {
 
   // ─── API Call ────────────────────────────────────────────
 
-  private async callQwenAPI(
+  private async callOpenRouterAPI(
     agent: Agent,
     messages: ChatMessage[],
     systemContent: string,
@@ -202,40 +202,37 @@ export class AgentManager {
 
     const body = {
       model: agent.model,
-      input: {
-        messages: [
-          { role: 'system', content: systemContent },
-          ...messages.map(m => ({ role: m.role, content: m.content })),
-        ],
-      },
-      parameters: {
-        temperature: agent.temperature,
-        max_tokens: Math.min(agent.maxTokens, modelInfo.maxTokens),
-        result_format: 'message',
-      },
+      messages: [
+        { role: 'system', content: systemContent },
+        ...messages.map(m => ({ role: m.role, content: m.content })),
+      ],
+      temperature: agent.temperature,
+      max_tokens: Math.min(agent.maxTokens, modelInfo.maxTokens),
     };
 
-    const res = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
+        'HTTP-Referer': 'https://github.com/ai-agent-studio',
+        'X-Title': 'AI Agent Studio VS Code',
       },
       body: JSON.stringify(body),
     });
 
     if (!res.ok) {
       const err = await res.text();
-      throw new Error(`Qwen API error ${res.status}: ${err}`);
+      throw new Error(`OpenRouter API error ${res.status}: ${err}`);
     }
 
     const data = (await res.json()) as {
-      output: { choices: Array<{ message: { content: string } }> };
+      choices: Array<{ message: { content: string } }>;
       usage: { total_tokens: number };
     };
 
     return {
-      response: data.output.choices[0].message.content,
+      response: data.choices[0].message.content,
       tokens: data.usage.total_tokens,
     };
   }
@@ -322,7 +319,7 @@ ${agent.name}`;
     this.createAgent({
       name: 'Dev Assistant',
       role: 'Especialista em código e arquitetura de software',
-      model: 'qwen-plus',
+      model: 'openai/gpt-4o-mini',
       systemPrompt: 'Você é um engenheiro de software sênior especialista em TypeScript, Python e arquitetura de sistemas. Forneça código limpo, bem comentado e seguindo boas práticas.',
       temperature: 0.3,
       maxTokens: 4096,
@@ -333,7 +330,7 @@ ${agent.name}`;
     this.createAgent({
       name: 'Doc Writer',
       role: 'Redator técnico e criador de documentação',
-      model: 'qwen-turbo',
+      model: 'anthropic/claude-3-haiku',
       systemPrompt: 'Você é um redator técnico especializado em criar documentação clara, estruturada e de fácil compreensão. Use markdown com formatação elegante.',
       temperature: 0.7,
       maxTokens: 2048,
