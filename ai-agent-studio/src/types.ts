@@ -3,11 +3,14 @@
 // ============================================================
 
 export type ModelId =
-  | 'qwen-plus'
-  | 'qwen-max'
-  | 'qwen-turbo'
-  | 'qwen-lite'
-  | 'qwen-coder-plus'
+  | 'openai/gpt-4o-mini'
+  | 'openai/gpt-4-turbo'
+  | 'anthropic/claude-3-haiku'
+  | 'anthropic/claude-3-opus'
+  | 'google/gemini-pro-1.5'
+  | 'meta-llama/llama-3-70b-instruct'
+  | 'mistral/mistral-large'
+  | 'qwen/qwen-2-72b-instruct'
   | 'lite-free';
 
 export interface ModelInfo {

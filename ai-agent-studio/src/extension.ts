@@ -197,7 +197,7 @@ async function handleWebviewMessage(msg: WebviewMessage, context: vscode.Extensi
 
     case 'saveSettings': {
       const cfg = vscode.workspace.getConfiguration('aiAgentStudio');
-      if (msg.apiKey) await cfg.update('qwenApiKey', msg.apiKey, vscode.ConfigurationTarget.Global);
+      if (msg.apiKey) await cfg.update('openRouterApiKey', msg.apiKey, vscode.ConfigurationTarget.Global);
       if (msg.defaultModel) await cfg.update('defaultModel', msg.defaultModel, vscode.ConfigurationTarget.Global);
       if (msg.temperature !== undefined) await cfg.update('temperature', msg.temperature, vscode.ConfigurationTarget.Global);
       if (msg.maxTokens !== undefined) await cfg.update('maxTokens', msg.maxTokens, vscode.ConfigurationTarget.Global);

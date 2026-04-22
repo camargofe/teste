@@ -76,16 +76,16 @@
     "configuration": {
       "title": "AI Agent Studio",
       "properties": {
-        "aiAgentStudio.qwenApiKey": {
+        "aiAgentStudio.openRouterApiKey": {
           "type": "string",
           "default": "",
-          "description": "Chave de API para o modelo Qwen (Alibaba Cloud)"
+          "description": "Chave de API para OpenRouter (https://openrouter.ai)"
         },
         "aiAgentStudio.defaultModel": {
           "type": "string",
-          "default": "qwen-plus",
-          "enum": ["qwen-plus", "qwen-turbo", "qwen-max", "qwen-lite"],
-          "description": "Modelo padrão para agentes"
+          "default": "openai/gpt-4o-mini",
+          "enum": ["openai/gpt-4o-mini", "openai/gpt-4-turbo", "anthropic/claude-3-haiku", "anthropic/claude-3-opus", "google/gemini-pro-1.5", "meta-llama/llama-3-70b-instruct", "mistral/mistral-large", "qwen/qwen-2-72b-instruct"],
+          "description": "Modelo padrão para agentes (OpenRouter)"
         },
         "aiAgentStudio.maxTokens": {
           "type": "number",
